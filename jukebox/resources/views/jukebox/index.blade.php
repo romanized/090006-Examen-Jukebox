@@ -31,7 +31,7 @@
     {{-- RECHTERDEEL: Speler --}}
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 flex flex-col justify-between">
         <div id="player-box" class="flex flex-col gap-5 hidden">
-            <img id="song-cover" class="w-full h-56 object-cover rounded-xl border border-gray-300">
+        <img id="song-cover" src="" alt="Cover" class="w-36 h-36 object-cover rounded-lg border border-gray-300 mx-auto bg-gray-100" onerror="this.src='/images/fallback-cover.jpg'">
             <div>
                 <h3 id="song-title" class="text-2xl font-bold text-gray-900"></h3>
                 <p id="song-artist" class="text-gray-600 text-sm"></p>

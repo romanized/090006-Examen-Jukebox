@@ -61,4 +61,50 @@ class SongController extends Controller
         return Response::json(['plays' => $song->plays]);
     }
 
+    public function edit(Song $song)
+{
+    $song->load('reviews');
+    return view('jukebox.edit', compact('song'));
+}
+
+    public function update(Request $request, Song $song)
+    {
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'artist' => 'required|string|max:255',
+        'filename' => 'nullable|file|mimes:mp3',
+        'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+
+    $data = $request->only('title', 'artist');
+
+    if ($request->hasFile('filename')) {
+        $data['filename'] = $request->file('filename')->store('songs', 'public');
+    }
+
+    if ($request->hasFile('cover_image')) {
+        $data['cover_image'] = $request->file('cover_image')->store('covers', 'public');
+    }
+
+    $song->update($data);
+
+    return redirect()->route('songs.admin')->with('success', 'Liedje bijgewerkt!');
+}
+
+    public function destroyReview(Song $song, Review $review)
+    {
+        if ($review->song_id !== $song->id) {
+            abort(403);
+    }
+
+    $review->delete();
+    return back()->with('success', 'Review verwijderd.');
+    }
+
+    public function adminIndex()
+    {
+    $songs = Song::orderByDesc('created_at')->get();
+    return view('jukebox.admin-index', compact('songs'));
+    }
+
 }
