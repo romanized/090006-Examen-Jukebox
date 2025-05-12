@@ -9,12 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('reviews', function (Blueprint $table) {
-            //
+            $table->string('name')->nullable()->after('id');
         });
     }
+    
 
     /**
      * Reverse the migrations.

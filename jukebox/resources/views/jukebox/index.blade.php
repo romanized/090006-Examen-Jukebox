@@ -50,6 +50,9 @@
 
                 <form id="review-form" method="POST" class="review-form">
                     @csrf
+                    <label for="name">Naam (optioneel)</label>
+                    <input type="text" name="name" id="review-name" placeholder="Bijv. DJ Sander">
+
                     <label for="review-textarea">Review achterlaten</label>
                     <textarea name="review" id="review-textarea" required></textarea>
                     <button type="submit" class="btn">Verstuur</button>
@@ -89,7 +92,8 @@
         if (song.reviews && song.reviews.length > 0) {
             song.reviews.forEach(r => {
                 const li = document.createElement('li');
-                li.textContent = r.review;
+                const naam = r.name ? r.name : 'Gast';
+                li.textContent = `${naam}: ${r.review}`;
                 reviewList.appendChild(li);
             });
         } else {
@@ -115,7 +119,7 @@
         }, 5000);
     }
 
-    // 👇 AJAX review zonder reload
+    // AJAX review zonder reload
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('review-form');
         form.addEventListener('submit', function (e) {
@@ -137,16 +141,18 @@
             .then(data => {
                 const ul = document.getElementById('song-reviews');
                 const li = document.createElement('li');
-                li.textContent = data.review;
+
+                const naam = data.name ? data.name : 'Gast';
+                const tijd = document.getElementById('song-audio').currentTime;
+                const minuten = Math.floor(tijd / 60);
+                const seconden = Math.floor(tijd % 60).toString().padStart(2, '0');
+
+                li.textContent = `${naam}: ${data.review} - at ${minuten}:${seconden}`;
                 ul.appendChild(li);
                 form.reset();
-            })
-            .catch(err => {
-                alert('Fout bij versturen van review.');
-                console.error(err);
             });
-        });
     });
+});
 </script>
 
 
