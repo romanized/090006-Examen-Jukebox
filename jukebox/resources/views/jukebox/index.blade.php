@@ -51,7 +51,7 @@
                 <form id="review-form" method="POST" class="review-form">
                     @csrf
                     <label for="name">Naam (optioneel)</label>
-                    <input type="text" name="name" id="review-name" placeholder="Bijv. DJ Sander">
+                    <input type="text" name="name" id="review-name" placeholder="Bijv. DJ Nebi">
 
                     <label for="review-textarea">Review achterlaten</label>
                     <textarea name="review" id="review-textarea" required></textarea>
@@ -119,7 +119,6 @@
         }, 5000);
     }
 
-    // AJAX review zonder reload
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('review-form');
         form.addEventListener('submit', function (e) {

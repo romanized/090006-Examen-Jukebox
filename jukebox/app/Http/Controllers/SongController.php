@@ -4,11 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Song;
 use App\Models\Review;
 
 class SongController extends Controller
 {
+
+    public function destroy(Song $song)
+    {
+        if ($song->filename && Storage::disk('public')->exists($song->filename)) {
+            Storage::disk('public')->delete($song->filename);
+        }
+    
+        if ($song->cover_image && Storage::disk('public')->exists($song->cover_image)) {
+            Storage::disk('public')->delete($song->cover_image);
+        }
+    
+        $song->delete();
+    
+        return redirect()->route('songs.admin')->with('success', 'Liedje + bestanden succesvol verwijderd.');
+    }
+
     public function index()
     {
         $songs = \App\Models\Song::with('reviews')->get();
