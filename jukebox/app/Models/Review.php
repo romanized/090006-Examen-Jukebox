@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
-    //
+    protected $fillable = ['review'];
+
+    public function song()
+    {
+        return $this->belongsTo(Song::class);
+    }
 }

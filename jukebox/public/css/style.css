@@ -1,0 +1,284 @@
+/* Algemene basisopmaak */
+body {
+  background-color: #f5f5f4;
+  color: #1f2937;
+  font-family: 'Rubik', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;800&display=swap');
+
+header {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+h1, h2, h3 {
+  margin: 0.5rem 0;
+}
+a {
+  color: #ec4899;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.large-logo {
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+
+.container {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  box-sizing: border-box;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.jukebox-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1800px;
+  padding: 3rem 0;
+  margin: 0 auto;
+  gap: 4rem;
+  box-sizing: border-box;
+}
+
+.jukebox-left,
+.jukebox-right {
+  flex: 1;
+  min-width: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.jukebox-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.song-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.song-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.song-button {
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 1rem;
+}
+
+.song-button:hover {
+  background: #f3f4f6;
+}
+
+.song-plays {
+  font-size: 0.875rem;
+  color: #3b82f6;
+}
+
+.song-player {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.player-header {
+  display: flex;
+  gap: 4rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.song-cover {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.player-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.song-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.song-artist {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.song-playcount {
+  font-size: 0.875rem;
+  color: #ca8a04;
+}
+
+.player-audio-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.song-audio {
+  width: 100%;
+  max-width: 600px;
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.review-form textarea {
+  height: 100px;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  resize: vertical;
+  width: 100%;
+}
+
+.btn {
+  background: #ec4899;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  font-weight: 600;
+}
+
+.btn:hover {
+  background: #db2777;
+}
+
+.review-box {
+  max-height: 180px;
+  overflow-y: auto;
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  margin-top: 1rem;
+}
+
+.review-box ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.review-box li {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.placeholder-box {
+  text-align: center;
+  color: gray;
+  margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+  .flex-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .jukebox-wrapper {
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    gap: 2rem;
+  }
+
+  .jukebox-left,
+  .jukebox-right {
+    width: 100%;
+    padding: 1.25rem;
+  }
+
+  .player-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .song-cover {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .large-logo {
+    font-size: 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .player-audio-wrapper {
+    justify-content: flex-start;
+  }
+
+  .song-audio {
+    max-width: 100%;
+  }
+
+  .review-form textarea {
+    height: 80px;
+  }
+
+  .review-box {
+    max-height: 200px;
+  }
+}

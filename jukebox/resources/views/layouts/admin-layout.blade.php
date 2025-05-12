@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>The Hatchet - Admin</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @livewireStyles
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">

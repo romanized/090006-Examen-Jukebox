@@ -24,9 +24,14 @@ class SongController extends Controller
     public function addReview(Request $request, Song $song)
     {
         $request->validate(['review' => 'required|string|max:255']);
-        $song->reviews()->create(['review' => $request->review]);
-        return back();
+        $review = $song->reviews()->create(['review' => $request->review]);
+    
+        return response()->json([
+            'success' => true,
+            'review' => $review->review
+        ]);
     }
+    
 
     public function create()
     {

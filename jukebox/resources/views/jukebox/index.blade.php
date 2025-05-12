@@ -1,89 +1,89 @@
-@extends('layouts.app-layout')
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>The Hatchet</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @livewireStyles
+</head>
+<body>
 
-@section('content')
-<div class="max-w-screen-xl mx-auto h-[85vh] grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
-    {{-- LINKERDEEL: Songlijst --}}
-    <div class="bg-[#f9f9f6] border border-gray-200 rounded-xl shadow-sm overflow-y-auto">
-        <div class="p-4 border-b border-gray-300">
-            <h2 class="text-xl font-semibold text-gray-800">Muzieklijst</h2>
-        </div>
-        <ul class="divide-y divide-gray-200">
-            @foreach($songs as $song)
-                <li>
-                    <button onclick="selectSong({{ $song->toJson() }})"
-                        class="w-full text-left px-5 py-4 hover:bg-[#f0f0ed] transition flex items-center justify-between">
-                        <div>
-                            <div class="font-medium text-gray-900">{{ $song->title }}</div>
-                            <div class="text-sm text-gray-500">{{ $song->artist }}</div>
-                        </div>
-                        <div class="flex items-center gap-1 text-sm text-yellow-600">
-                            <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                <path d="M10 15l-5.878 3.09 1.122-6.545L.489 6.91l6.563-.955L10 0l2.949 5.955 6.563.955-4.755 4.635 1.121 6.545z"/>
-                            </svg>
-                            <span>{{ $song->plays }}</span>
-                        </div>
-                    </button>
-                </li>
-            @endforeach
-        </ul>
+<header>
+    <div class="container flex-between">
+        <a href="{{ route('home') }}" class="logo large-logo">The Hatchet Jukebox</a>
+        <a href="{{ route('songs.admin') }}" class="btn">Admin login</a>
     </div>
+</header>
 
-    {{-- RECHTERDEEL: Speler --}}
-    <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 flex flex-col justify-between">
-        <div id="player-box" class="flex flex-col gap-5 hidden">
-        <img id="song-cover" src="" alt="Cover" class="w-36 h-36 object-cover rounded-lg border border-gray-300 mx-auto bg-gray-100" onerror="this.src='/images/fallback-cover.jpg'">
-            <div>
-                <h3 id="song-title" class="text-2xl font-bold text-gray-900"></h3>
-                <p id="song-artist" class="text-gray-600 text-sm"></p>
-                <p id="song-plays" class="text-sm text-yellow-600 mt-1"></p>
-            </div>
-            <audio id="song-audio" controls class="w-full rounded"></audio>
-
-            <form id="review-form" method="POST" class="space-y-2 mt-4">
-                @csrf
-                <label class="block text-sm font-medium text-gray-700">Review</label>
-                <textarea name="review" id="review-textarea" class="w-full border border-gray-300 rounded p-2" placeholder="Laat een review achter" required></textarea>
-                <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2 rounded">
-                    Verstuur
-                </button>
-            </form>
-
-            <div id="review-box">
-                <h4 class="font-semibold mt-4 text-gray-800">Reviews</h4>
-                <ul id="song-reviews" class="text-sm text-gray-700 list-disc pl-5 space-y-1 mt-2"></ul>
+<main class="container">
+    <div class="jukebox-wrapper">
+        <div class="jukebox-left">
+            <h2 class="jukebox-title">Muzieklijst</h2>
+            <div class="song-list">
+                @foreach($songs as $song)
+                    <div class="song-item">
+                        <button onclick="selectSong({{ $song->toJson() }})" class="song-button">
+                            <strong>{{ $song->title }}</strong><br>
+                            <small>{{ $song->artist }}</small>
+                            <span class="song-plays">👁️ {{ $song->plays }}</span>
+                        </button>
+                    </div>
+                @endforeach
             </div>
         </div>
 
-        <div id="placeholder-box" class="text-center text-gray-400 my-auto">
-            <p>Selecteer een nummer aan de linkerkant om af te spelen.</p>
+        <div class="jukebox-right">
+            <div id="player-box" class="song-player" style="display: none;">
+                <div class="player-header">
+                    <img id="song-cover" class="song-cover" alt="Cover">
+                    <div class="player-meta">
+                        <h3 id="song-title" class="song-title"></h3>
+                        <p id="song-artist" class="song-artist"></p>
+                        <p id="song-plays" class="song-playcount"></p>
+                    </div>
+                </div>
+
+                <div class="player-audio-wrapper">
+                    <audio id="song-audio" controls class="song-audio"></audio>
+                </div>
+
+                <form id="review-form" method="POST" class="review-form">
+                    @csrf
+                    <label for="review-textarea">Review achterlaten</label>
+                    <textarea name="review" id="review-textarea" required></textarea>
+                    <button type="submit" class="btn">Verstuur</button>
+                </form>
+
+                <div id="review-box" class="review-box">
+                    <h4>📣 Reviews</h4>
+                    <ul id="song-reviews" class="review-list"></ul>
+                </div>
+            </div>
+
+            <div id="placeholder-box" class="placeholder-box">
+                <p>Selecteer een nummer aan de linkerkant om af te spelen.</p>
+            </div>
         </div>
     </div>
-</div>
+</main>
 
 <script>
+    let playTimeout;
+
     function selectSong(song) {
-        document.getElementById('player-box').classList.remove('hidden');
-        document.getElementById('placeholder-box').classList.add('hidden');
+        clearTimeout(playTimeout);
+
+        document.getElementById('player-box').style.display = 'block';
+        document.getElementById('placeholder-box').style.display = 'none';
 
         document.getElementById('song-cover').src = `/storage/${song.cover_image}`;
         document.getElementById('song-title').textContent = song.title;
         document.getElementById('song-artist').textContent = song.artist;
-        document.getElementById('review-form').action = `/review/${song.id}`;
+        document.getElementById('song-plays').textContent = `👁️ ${song.plays}x`;
         document.getElementById('song-audio').src = `/storage/${song.filename}`;
+        document.getElementById('review-form').action = `/review/${song.id}`;
 
-        // Fetch nieuwe 'plays' waarde
-        fetch(`/increment-play/${song.id}`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('song-plays').textContent = `Gekozen: ${data.plays}x`;
-        });
-
-        // Reviews weergeven
         const reviewList = document.getElementById('song-reviews');
         reviewList.innerHTML = '';
         if (song.reviews && song.reviews.length > 0) {
@@ -99,6 +99,57 @@
         }
 
         document.getElementById('song-audio').play();
+
+        playTimeout = setTimeout(() => {
+            fetch(`/increment-play/${song.id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('song-plays').textContent = `👁️ ${data.plays}x`;
+            });
+        }, 5000);
     }
+
+    // 👇 AJAX review zonder reload
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('review-form');
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const actionUrl = form.getAttribute('action');
+            const reviewText = formData.get('review');
+
+            fetch(actionUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const ul = document.getElementById('song-reviews');
+                const li = document.createElement('li');
+                li.textContent = data.review;
+                ul.appendChild(li);
+                form.reset();
+            })
+            .catch(err => {
+                alert('Fout bij versturen van review.');
+                console.error(err);
+            });
+        });
+    });
 </script>
-@endsection
+
+
+@livewireScripts
+</body>
+</html>
